@@ -9,7 +9,7 @@ export default function Caracteristicas() {
   const isInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="caracteristicas" className="bg-bg py-24 px-6">
+    <section id="caracteristicas" className="py-24 px-6">
       <div className="max-w-5xl mx-auto">
 
         <motion.div

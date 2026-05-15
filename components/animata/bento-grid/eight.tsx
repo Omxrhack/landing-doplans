@@ -7,7 +7,6 @@ import { MapPin, Bell, MessageCircle, Sparkles, Users, CalendarDays } from "luci
 import BarChart from "@/components/animata/graphs/bar-chart";
 import AvatarList from "@/components/animata/list/avatar-list";
 import Counter from "@/components/animata/text/counter";
-import Ticker from "@/components/animata/text/ticker";
 import TypingText from "@/components/animata/text/typing-text";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +29,7 @@ function AnimatedCard({
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "group/bento relative h-full w-full overflow-hidden rounded-3xl border border-border p-5 transition-colors duration-300 hover:border-purple/30",
+        "group/bento relative h-full w-full overflow-hidden rounded-3xl border border-border bg-bg p-5 transition-colors duration-300 hover:border-purple/30 font-display",
         className,
       )}
     >
@@ -41,16 +40,18 @@ function AnimatedCard({
 
 function FeatureOne() {
   return (
-    <AnimatedCard className="flex flex-col bg-bg-secondary" delay={0}>
+    <AnimatedCard className="flex flex-col bg-bg" delay={0}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted">
         <MapPin className="size-4 text-purple" />
         Eventos hoy
       </div>
       <div className="mt-auto">
         <div className="flex items-end gap-1">
-          <span className="text-5xl font-black text-fg">
-            <Ticker value="247" numberClassName="leading-none" />
-          </span>
+          <Counter
+            targetValue={247}
+            format={(v) => String(Math.ceil(v))}
+            className="text-5xl font-black text-fg"
+          />
           <span className="mb-1 text-lg font-semibold text-purple">+</span>
         </div>
         <div className="text-xs text-fg-muted">cerca de ti ahora</div>
@@ -80,7 +81,7 @@ function FeatureTwo() {
 
 function FeatureThree() {
   return (
-    <AnimatedCard className="flex flex-col bg-bg-secondary" delay={0.16}>
+    <AnimatedCard className="flex flex-col bg-bg" delay={0.16}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted">
         <Sparkles className="size-4 text-purple" />
         IA personalizada
@@ -97,7 +98,7 @@ function FeatureThree() {
 
 function FeatureFour() {
   return (
-    <AnimatedCard className="flex flex-col gap-3 bg-bg-secondary sm:col-span-2" delay={0.08}>
+    <AnimatedCard className="flex flex-col gap-3 bg-bg sm:col-span-2" delay={0.08}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted">
         <CalendarDays className="size-4 text-purple" />
         Planifica con amigos
@@ -120,7 +121,7 @@ function FeatureFour() {
 
 function FeatureFive() {
   return (
-    <AnimatedCard className="flex items-center justify-center bg-bg-secondary sm:col-span-2" delay={0.16}>
+    <AnimatedCard className="flex items-center justify-center bg-bg sm:col-span-2" delay={0.16}>
       <div className="relative flex items-center justify-center">
         <div className="text-6xl font-black uppercase text-fg/10 transition duration-300 group-hover/bento:opacity-40 md:text-8xl">
           doplans
@@ -135,7 +136,7 @@ function FeatureFive() {
 
 function FeatureSix() {
   return (
-    <AnimatedCard className="bg-bg-secondary" delay={0}>
+    <AnimatedCard className="bg-bg" delay={0}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted mb-3">
         <MessageCircle className="size-4 text-purple" />
         Actividad semanal
@@ -159,7 +160,7 @@ function FeatureSix() {
 
 function FeatureSeven() {
   return (
-    <AnimatedCard className="flex flex-col gap-2 bg-bg-secondary" delay={0.08}>
+    <AnimatedCard className="flex flex-col gap-2 bg-bg" delay={0.08}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted mb-1">
         <MapPin className="size-4 text-purple" />
         Categorías
@@ -179,7 +180,7 @@ function FeatureSeven() {
 
 function FeatureEight() {
   return (
-    <AnimatedCard className="relative flex flex-col bg-bg-secondary sm:col-span-2" delay={0.16}>
+    <AnimatedCard className="relative flex flex-col bg-bg sm:col-span-2" delay={0.16}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted mb-3">
         <Bell className="size-4 text-purple" />
         Alertas en tiempo real
@@ -190,7 +191,7 @@ function FeatureEight() {
           { text: "👥 Carlos y Ana publicaron un plan", time: "hace 5 min" },
           { text: "📍 Nuevo evento cerca: Mercado artesanal", time: "hace 12 min" },
         ].map((notif, i) => (
-          <div key={i} className="flex items-start justify-between rounded-xl bg-bg p-2.5 border border-border">
+          <div key={i} className="flex items-start justify-between rounded-xl bg-bg-secondary p-2.5 border border-border">
             <span className="text-xs text-fg leading-relaxed">{notif.text}</span>
             <span className="ml-2 shrink-0 text-[10px] text-fg-muted">{notif.time}</span>
           </div>

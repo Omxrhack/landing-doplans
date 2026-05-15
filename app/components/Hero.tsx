@@ -1,6 +1,5 @@
 "use client";
 
-import { PointerDotBackground } from "@/app/components/PointerDotBackground";
 import Navbar from "@/app/components/Navbar";
 import { WordRotate } from "@/components/ui/word-rotate";
 import dynamic from "next/dynamic";
@@ -9,14 +8,11 @@ const GlobeDoplans = dynamic(() => import("@/components/globe"), { ssr: false })
 
 export default function Hero() {
   return (
-    <PointerDotBackground className="min-h-screen flex flex-col overflow-hidden">
+    <div className="relative min-h-screen flex flex-col">
       <Navbar />
 
-      {/*
-        Contenedor del globo — misma posición que funcionó:
-        120vh × 120vh, borde izq ~50% viewport, cortado por overflow-hidden
-      */}
-      <div className="absolute inset-0 z-0">
+      {/* overflow-hidden solo aquí para recortar el globo */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <GlobeDoplans />
       </div>
 
@@ -42,6 +38,7 @@ export default function Hero() {
           </p>
         </div>
       </div>
-    </PointerDotBackground>
+
+    </div>
   );
 }

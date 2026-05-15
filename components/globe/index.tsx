@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import * as THREE from "three";
 
 const locations = [
   { id: 1, country: "Germany",      lat: 52.52,   lng: 13.405   },
@@ -31,11 +30,26 @@ export default function GlobeDoplans() {
   if (typeof window !== "undefined") Globe = require("react-globe.gl").default;
 
   const globeEl = useRef(null);
-  const [arcsData, setArcsData]           = useState([]);
-  const [ringsData, setRingsData]         = useState([]);
-  const [currentIndex, setCurrentIndex]   = useState(0);
-  const [hexData, setHexData]             = useState([]);
-  const [dimensions, setDimensions]       = useState({ width: 0, height: 0 });
+  const [arcsData, setArcsData]         = useState([]);
+  const [ringsData, setRingsData]       = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hexData, setHexData]           = useState([]);
+  const [dimensions, setDimensions]     = useState({ width: 0, height: 0 });
+  const [isDark, setIsDark]             = useState(true);
+  const isDarkRef                       = useRef(true);
+
+  // Detect theme — ref keeps color in sync without re-triggering animation
+  useEffect(() => {
+    const check = () => {
+      const dark = document.documentElement.classList.contains("dark");
+      setIsDark(dark);
+      isDarkRef.current = dark;
+    };
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     getData().then((geo) => setHexData(geo.features));
@@ -57,7 +71,7 @@ export default function GlobeDoplans() {
     setArcsData([{
       startLat: from.lat, startLng: from.lng,
       endLat: to.lat,     endLng: to.lng,
-      color: "rgba(155, 95, 222, 1)",
+      color: isDarkRef.current ? "rgba(180, 120, 255, 1)" : "rgba(90, 24, 154, 1)",
     }]);
 
     if (globeEl.current) {
@@ -68,49 +82,45 @@ export default function GlobeDoplans() {
       setTimeout(() => {
         setRingsData([{ lat: to.lat, lng: to.lng, maxRadius: 5, propagationSpeed: 5, repeatPeriod: 1000 }]);
       }, 3000);
-      setTimeout(() => setArcsData([]),       3000);
-      setTimeout(() => setRingsData([]),      6300);
-      setTimeout(() => setCurrentIndex(nextIdx), 6800);
+      setTimeout(() => setArcsData([]),            3000);
+      setTimeout(() => setRingsData([]),           6300);
+      setTimeout(() => setCurrentIndex(nextIdx),   6800);
     }
   }, [currentIndex]);
 
-  const globeMaterial = new THREE.MeshPhongMaterial({
-    color: new THREE.Color(0x0d0520),
-    shininess: 15,
-  });
+  // Colors per theme: dark = bright purple, light = deep purple
+  const dotColor    = isDark ? "rgba(180, 120, 255, 0.85)" : "rgba(90, 24, 154, 0.75)";
+  const ringColor   = isDark ? "rgba(200, 140, 255, 0.9)"  : "rgba(90, 24, 154, 0.85)";
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <div className="translate-x-[38%] scale-[1.35]">
-      <Globe
-        ref={globeEl}
-        width={dimensions.width}
-        height={dimensions.height}
-        globeMaterial={globeMaterial}
-        hexPolygonsData={hexData}
-        hexPolygonResolution={3}
-        hexPolygonMargin={0.35}
-        hexPolygonUseDots={true}
-        hexPolygonColor={() => "rgba(155, 95, 222, 0.55)"}
-        arcsData={arcsData}
-        arcColor={(d) => d.color}
-        arcStroke={0.5}
-        arcDashLength={1}
-        arcDashGap={1}
-        arcDashInitialGap={() => Math.random()}
-        arcDashAnimateTime={1600}
-        arcAltitudeAutoScale={0.4}
-        ringsData={ringsData}
-        ringColor={() => "rgba(155, 95, 222, 0.8)"}
-        ringMaxRadius={() => 3}
-        ringPropagationSpeed={() => 3}
-        ringRepeatPeriod={() => 1600}
-        backgroundColor="rgba(0,0,0,0)"
-        showAtmosphere={true}
-        atmosphereColor="#7B2FBE"
-        atmosphereAltitude={0.15}
-        showGlobe={true}
-      />
+        <Globe
+          ref={globeEl}
+          width={dimensions.width}
+          height={dimensions.height}
+          hexPolygonsData={hexData}
+          hexPolygonResolution={3}
+          hexPolygonMargin={0.35}
+          hexPolygonUseDots={true}
+          hexPolygonColor={() => dotColor}
+          arcsData={arcsData}
+          arcColor={(d) => d.color}
+          arcStroke={0.8}
+          arcDashLength={1}
+          arcDashGap={1}
+          arcDashInitialGap={() => Math.random()}
+          arcDashAnimateTime={1600}
+          arcAltitudeAutoScale={0.4}
+          ringsData={ringsData}
+          ringColor={() => ringColor}
+          ringMaxRadius={() => 3}
+          ringPropagationSpeed={() => 3}
+          ringRepeatPeriod={() => 1600}
+          backgroundColor="rgba(0,0,0,0)"
+          showAtmosphere={false}
+          showGlobe={false}
+        />
       </div>
     </div>
   );

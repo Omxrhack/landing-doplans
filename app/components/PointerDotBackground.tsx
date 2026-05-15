@@ -54,7 +54,7 @@ export function PointerDotBackground({
   return (
     <div
       ref={containerRef}
-      className={cn("relative bg-bg overflow-hidden", className)}
+      className={cn("relative bg-bg", className)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
