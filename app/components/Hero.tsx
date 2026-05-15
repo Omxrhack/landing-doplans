@@ -17,7 +17,7 @@ export default function Hero() {
       </div>
 
       {/* Texto hero */}
-      <div className="relative flex-1 flex items-center z-20 px-12 lg:px-24 min-h-[calc(100vh-4rem)] pointer-events-none">
+      <div className="relative flex-1 flex items-center z-20 px-12 lg:px-24 min-h-screen pt-20 pointer-events-none">
         <div className="flex flex-col gap-5 max-w-lg">
           <div className="flex flex-col">
             <h1 className="font-display font-bold text-5xl lg:text-7xl text-fg leading-tight">

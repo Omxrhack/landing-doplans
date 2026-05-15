@@ -213,6 +213,9 @@ body {
   html {
     @apply font-sans;
   }
+  * {
+    cursor: none !important;
+  }
 }
 
 ::view-transition-old(root), ::view-transition-new(root) {
