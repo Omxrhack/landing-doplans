@@ -1,8 +1,10 @@
+import dynamic from "next/dynamic";
 import { PointerDotBackground } from "./components/PointerDotBackground";
 import Hero from "./components/Hero";
-import Caracteristicas from "./components/Caracteristicas";
-import Problematica from "./components/Problematica";
-import ParallaxBand from "./components/ParallaxBand";
+
+const Caracteristicas = dynamic(() => import("./components/Caracteristicas"), { ssr: false });
+const Problematica    = dynamic(() => import("./components/Problematica"),    { ssr: false });
+const ParallaxBand    = dynamic(() => import("./components/ParallaxBand"),    { ssr: false });
 
 export default function Home() {
   return (

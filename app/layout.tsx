@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { Poppins, Urbanist, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
+import dynamic from "next/dynamic";
 import Providers from "./components/Providers";
+
+const SmoothCursor = dynamic(
+  () => import("@/components/ui/smooth-cursor").then((m) => ({ default: m.SmoothCursor })),
+  { ssr: false }
+);
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
