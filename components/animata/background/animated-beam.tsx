@@ -28,7 +28,7 @@ function Beam({ index }: { index: number }) {
           "h-12": !flag,
         })}
       >
-        <div className="h-full w-full bg-linear-to-b from-neutral-50/50 via-neutral-100 via-75% to-neutral-50" />
+        <div className="h-full w-full bg-linear-to-b from-purple-200/30 via-purple-100/10 via-75% to-transparent" />
       </div>
     </div>
   );
@@ -68,7 +68,7 @@ function Background() {
   return (
     <div
       ref={containerRef}
-      className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-linear-to-t from-indigo-900 to-indigo-950"
+      className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-linear-to-t from-[#1a0533] to-[#09090b]"
     >
       <style>{`
         @keyframes meteor {
@@ -79,7 +79,7 @@ function Background() {
       <div
         style={{
           background:
-            "radial-gradient(50% 50% at 50% 50%,#072a39 0%,rgb(7,42,57) 50%,rgba(7,42,57,0) 100%)",
+            "radial-gradient(50% 50% at 50% 50%,#2a0a54 0%,rgb(26,5,51) 50%,rgba(26,5,51,0) 100%)",
         }}
         className="absolute inset-0 top-1/2 h-full w-full rounded-full opacity-40"
       />
