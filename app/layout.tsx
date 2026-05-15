@@ -3,6 +3,7 @@ import { Poppins, Urbanist, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
+import Providers from "./components/Providers";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -42,7 +43,7 @@ export default function RootLayout({
           }}
         />
         <SmoothCursor />
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
