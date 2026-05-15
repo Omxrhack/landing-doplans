@@ -60,6 +60,7 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
     const from    = GLOBE_EVENTS[currentIndex];
     const nextIdx = (currentIndex + 1) % GLOBE_EVENTS.length;
     const to      = GLOBE_EVENTS[nextIdx];
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
     setArcsData([{
       startLat: from.lat, startLng: from.lng,
@@ -70,23 +71,25 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
     if (globeEl.current) {
       globeEl.current.pointOfView({ lat: from.lat, lng: from.lng, altitude: 2 }, 0);
 
-      setTimeout(() => {
+      timers.push(setTimeout(() => {
         globeEl.current?.pointOfView({ lat: to.lat, lng: to.lng, altitude: 2 }, 3000);
-      }, 0);
+      }, 0));
 
-      setTimeout(() => {
+      timers.push(setTimeout(() => {
         setRingsData([{ lat: to.lat, lng: to.lng, maxRadius: 5, propagationSpeed: 5, repeatPeriod: 1000 }]);
-        onActiveEventRef.current?.(GLOBE_EVENTS[nextIdx]); // card aparece al llegar
-      }, 3000);
+        onActiveEventRef.current?.(GLOBE_EVENTS[nextIdx]);
+      }, 3000));
 
-      setTimeout(() => setArcsData([]),  3000);
-      setTimeout(() => setRingsData([]), 6300);
+      timers.push(setTimeout(() => setArcsData([]),  3000));
+      timers.push(setTimeout(() => setRingsData([]), 6300));
 
-      setTimeout(() => {
-        onActiveEventRef.current?.(null); // card desaparece antes del siguiente ciclo
+      timers.push(setTimeout(() => {
+        onActiveEventRef.current?.(null);
         setCurrentIndex(nextIdx);
-      }, 6800);
+      }, 6800));
     }
+
+    return () => timers.forEach(clearTimeout);
   }, [currentIndex]);
 
   const dotColor   = isDark ? "rgba(180, 120, 255, 0.85)" : "rgba(90, 24, 154, 0.75)";

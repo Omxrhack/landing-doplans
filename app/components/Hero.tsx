@@ -6,6 +6,7 @@ import Navbar from "@/app/components/Navbar";
 import { WordRotate } from "@/components/ui/word-rotate";
 import dynamic from "next/dynamic";
 import { type GlobeEvent } from "@/lib/globe-events";
+import { MapPin, Clock, Users } from "lucide-react";
 
 const GlobeDoplans = dynamic(() => import("@/components/globe"), { ssr: false });
 
@@ -16,7 +17,6 @@ export default function Hero() {
     <div className="relative min-h-screen flex flex-col">
       <Navbar />
 
-      {/* overflow-hidden solo aquí para recortar el globo */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <GlobeDoplans onActiveEvent={setActiveEvent} />
       </div>
@@ -49,26 +49,68 @@ export default function Hero() {
         {activeEvent && (
           <motion.div
             key={activeEvent.id}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0,  scale: 1    }}
-            exit={{    opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="hidden lg:block absolute right-16 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
+            initial={{ opacity: 0, y: 32, scale: 0.92, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0,  scale: 1,    filter: "blur(0px)" }}
+            exit={{    opacity: 0, y: -24, scale: 0.94, filter: "blur(6px)" }}
+            transition={{
+              duration: 0.55,
+              ease: [0.16, 1, 0.3, 1],
+              filter: { duration: 0.3 },
+            }}
+            className="hidden lg:block absolute right-14 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
           >
-            <div className="bg-bg/80 backdrop-blur-md border border-border rounded-2xl p-4 w-56 shadow-lg shadow-purple/10">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">{activeEvent.emoji}</span>
-                <div>
-                  <p className="font-display font-semibold text-sm text-fg leading-tight">{activeEvent.name}</p>
-                  <p className="text-[10px] text-purple font-medium">{activeEvent.city}</p>
+            {/* Glow exterior */}
+            <div className="absolute -inset-3 rounded-3xl bg-purple/10 blur-xl" />
+
+            <div className="relative w-60 rounded-2xl border border-border bg-bg-secondary shadow-2xl shadow-purple/15 overflow-hidden">
+
+              {/* Franja superior con color de categoría */}
+              <div className="h-1 w-full bg-gradient-to-r from-purple via-purple-light to-transparent" />
+
+              <div className="p-4">
+                {/* Header: emoji + evento + ciudad */}
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-purple/15 flex items-center justify-center text-xl">
+                    {activeEvent.emoji}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-display font-bold text-sm text-fg leading-snug truncate">
+                      {activeEvent.name}
+                    </p>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <MapPin className="w-2.5 h-2.5 text-purple shrink-0" />
+                      <p className="text-[11px] text-purple font-semibold truncate">{activeEvent.city}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center justify-between text-[11px]">
-                <span className="text-fg-muted">{activeEvent.time}</span>
-                <span className="font-semibold text-fg">{activeEvent.attendees.toLocaleString()} van</span>
-              </div>
-              <div className="mt-2 inline-block bg-purple/10 text-purple text-[10px] font-medium px-2 py-0.5 rounded-full border border-purple/20">
-                {activeEvent.category}
+
+                {/* Info: horario + asistentes */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-[11px] text-fg-muted">
+                    <Clock className="w-3 h-3 shrink-0" />
+                    <span>{activeEvent.time}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-fg-muted">
+                    <Users className="w-3 h-3 shrink-0" />
+                    <span className="font-semibold text-fg">{activeEvent.attendees.toLocaleString()}</span>
+                  </div>
+                </div>
+
+                {/* Categoría + barra de progreso decorativa */}
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="bg-purple/10 text-purple text-[10px] font-semibold px-2.5 py-1 rounded-full border border-purple/20">
+                    {activeEvent.category}
+                  </span>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-1 rounded-full bg-purple"
+                        style={{ height: `${8 + Math.random() * 8}px`, opacity: 0.3 + i * 0.15 }}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
