@@ -19,10 +19,17 @@ function Word({
   start: number;
   end: number;
 }) {
-  const opacity = useTransform(progress, [start, end], [0.15, 1]);
+  const peakIn  = start + (end - start) * 0.18;
+  const peakOut = start + (end - start) * 0.72;
 
+  const opacity = useTransform(progress, [start, peakIn, peakOut, end], [0, 1, 1, 0]);
+  const y       = useTransform(progress, [start, peakIn, peakOut, end], ["32px", "0px", "0px", "-32px"]);
+  const scale   = useTransform(progress, [start, peakIn, peakOut, end], [0.82, 1, 1, 0.94]);
   return (
-    <motion.span style={{ opacity }} className="inline-block mr-[0.25em]">
+    <motion.span
+      style={{ opacity, y, scale }}
+      className="absolute inset-0 flex items-center justify-center font-display font-black text-[clamp(3.5rem,10vw,10rem)] text-purple leading-none text-center px-8"
+    >
       {word}
     </motion.span>
   );
@@ -36,19 +43,22 @@ export default function ParallaxBand() {
   });
 
   const total = WORDS.length;
+  const rangeStart = 0.12;
+  const rangeEnd   = 0.97;
+  const step = (rangeEnd - rangeStart) / total;
 
   return (
-    <div ref={ref} className="relative h-[200vh]">
-      <div className="sticky top-0 h-screen flex items-center justify-center px-8 lg:px-24">
-        <p className="font-display font-black text-[clamp(2.2rem,5.5vw,5rem)] text-fg text-center leading-[1.15] max-w-3xl">
+    <div ref={ref} className="relative h-[400vh]">
+      <div className="sticky top-0 h-screen">
+        <div className="relative w-full h-full">
           {WORDS.map((word, i) => {
-            const start = i / total;
-            const end = (i + 1) / total;
+            const start = rangeStart + i * step;
+            const end   = start + step;
             return (
               <Word key={i} word={word} progress={scrollYProgress} start={start} end={end} />
             );
           })}
-        </p>
+        </div>
       </div>
     </div>
   );
