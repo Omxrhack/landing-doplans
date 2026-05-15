@@ -2,21 +2,11 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { GLOBE_EVENTS, type GlobeEvent } from "@/lib/globe-events";
 
-const locations = [
-  { id: 1, country: "Germany",      lat: 52.52,   lng: 13.405   },
-  { id: 2, country: "Japan",        lat: 36.2048, lng: 138.2529 },
-  { id: 3, country: "Brazil",       lat: -14.235, lng: -51.9253 },
-  { id: 4, country: "Mexico",       lat: 19.4326, lng: -99.1332 },
-  { id: 5, country: "Canada",       lat: 56.1304, lng: -106.3468},
-  { id: 6, country: "Australia",    lat: -35.28,  lng: 149.13   },
-  { id: 7, country: "France",       lat: 48.8566, lng: 2.3522   },
-  { id: 8, country: "India",        lat: 28.6139, lng: 77.209   },
-  { id: 9, country: "England",      lat: 51.5074, lng: -0.1278  },
-  { id: 10, country: "South Africa",lat: -25.746, lng: 28.1881  },
-  { id: 11, country: "Spain",       lat: 40.4168, lng: -3.7038  },
-  { id: 12, country: "Colombia",    lat: 4.711,   lng: -74.0721 },
-];
+interface GlobeDoplansPropss {
+  onActiveEvent?: (event: GlobeEvent | null) => void;
+}
 
 const getData = async () => {
   const res = await fetch(
@@ -25,7 +15,7 @@ const getData = async () => {
   return res.json();
 };
 
-export default function GlobeDoplans() {
+export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
   let Globe = () => null;
   if (typeof window !== "undefined") Globe = require("react-globe.gl").default;
 
@@ -37,8 +27,11 @@ export default function GlobeDoplans() {
   const [dimensions, setDimensions]     = useState({ width: 0, height: 0 });
   const [isDark, setIsDark]             = useState(true);
   const isDarkRef                       = useRef(true);
+  const onActiveEventRef                = useRef(onActiveEvent);
 
-  // Detect theme — ref keeps color in sync without re-triggering animation
+  useEffect(() => { onActiveEventRef.current = onActiveEvent; }, [onActiveEvent]);
+
+  // Detect theme
   useEffect(() => {
     const check = () => {
       const dark = document.documentElement.classList.contains("dark");
@@ -64,9 +57,9 @@ export default function GlobeDoplans() {
   }, []);
 
   useEffect(() => {
-    const from = locations[currentIndex];
-    const nextIdx = (currentIndex + 1) % locations.length;
-    const to = locations[nextIdx];
+    const from    = GLOBE_EVENTS[currentIndex];
+    const nextIdx = (currentIndex + 1) % GLOBE_EVENTS.length;
+    const to      = GLOBE_EVENTS[nextIdx];
 
     setArcsData([{
       startLat: from.lat, startLng: from.lng,
@@ -76,21 +69,30 @@ export default function GlobeDoplans() {
 
     if (globeEl.current) {
       globeEl.current.pointOfView({ lat: from.lat, lng: from.lng, altitude: 2 }, 0);
+
       setTimeout(() => {
         globeEl.current?.pointOfView({ lat: to.lat, lng: to.lng, altitude: 2 }, 3000);
       }, 0);
+
       setTimeout(() => {
         setRingsData([{ lat: to.lat, lng: to.lng, maxRadius: 5, propagationSpeed: 5, repeatPeriod: 1000 }]);
+        onActiveEventRef.current?.(GLOBE_EVENTS[nextIdx]); // card aparece al llegar
       }, 3000);
-      setTimeout(() => setArcsData([]),            3000);
-      setTimeout(() => setRingsData([]),           6300);
-      setTimeout(() => setCurrentIndex(nextIdx),   6800);
+
+      setTimeout(() => setArcsData([]),  3000);
+      setTimeout(() => setRingsData([]), 6300);
+
+      setTimeout(() => {
+        onActiveEventRef.current?.(null); // card desaparece antes del siguiente ciclo
+        setCurrentIndex(nextIdx);
+      }, 6800);
     }
   }, [currentIndex]);
 
-  // Colors per theme: dark = bright purple, light = deep purple
-  const dotColor    = isDark ? "rgba(180, 120, 255, 0.85)" : "rgba(90, 24, 154, 0.75)";
-  const ringColor   = isDark ? "rgba(200, 140, 255, 0.9)"  : "rgba(90, 24, 154, 0.85)";
+  const dotColor   = isDark ? "rgba(180, 120, 255, 0.85)" : "rgba(90, 24, 154, 0.75)";
+  const ringColor  = isDark ? "rgba(200, 140, 255, 0.9)"  : "rgba(90, 24, 154, 0.85)";
+  const pinColor   = isDark ? "rgba(200, 150, 255, 0.95)" : "rgba(90, 24, 154, 0.9)";
+  const labelColor = isDark ? "rgba(230, 200, 255, 1)"    : "rgba(55, 10, 110, 1)";
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -117,6 +119,25 @@ export default function GlobeDoplans() {
           ringMaxRadius={() => 3}
           ringPropagationSpeed={() => 3}
           ringRepeatPeriod={() => 1600}
+          pointsData={GLOBE_EVENTS}
+          pointLat="lat"
+          pointLng="lng"
+          pointAltitude={0.06}
+          pointRadius={0.35}
+          pointColor={() => pinColor}
+          pointsMerge={false}
+          pointsTransitionDuration={800}
+          labelsData={GLOBE_EVENTS}
+          labelLat="lat"
+          labelLng="lng"
+          labelText={(d) => `${d.emoji} ${d.name}`}
+          labelSize={0.5}
+          labelAltitude={0.08}
+          labelColor={() => labelColor}
+          labelDotRadius={0.25}
+          labelIncludeDot={true}
+          labelDotOrientation={() => "bottom"}
+          labelsTransitionDuration={800}
           backgroundColor="rgba(0,0,0,0)"
           showAtmosphere={false}
           showGlobe={false}
