@@ -4,7 +4,6 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import Providers from "./components/Providers";
-
 const SmoothCursor = dynamic(
   () => import("@/components/ui/smooth-cursor").then((m) => ({ default: m.SmoothCursor })),
   { ssr: false }

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useParallax, ParallaxProvider } from "react-scroll-parallax";
+import { useParallax } from "react-scroll-parallax";
 import { DotPattern } from "@/components/ui/dot-pattern";
 
 const WORDS = [
