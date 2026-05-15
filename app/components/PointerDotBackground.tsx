@@ -15,14 +15,20 @@ export function PointerDotBackground({
   const brightWrapperRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
-  function setMask(value: string) {
+  function showBright(x: number, y: number) {
     if (!brightWrapperRef.current) return;
-    brightWrapperRef.current.style.maskImage = value;
+    brightWrapperRef.current.style.opacity = "1";
+    brightWrapperRef.current.style.maskImage = `radial-gradient(circle 280px at ${x}px ${y}px, black 0%, transparent 100%)`;
+  }
+
+  function hideBright() {
+    if (!brightWrapperRef.current) return;
+    brightWrapperRef.current.style.opacity = "0";
   }
 
   useEffect(() => {
     function reset() {
-      setMask("none");
+      hideBright();
       if (glowRef.current) glowRef.current.style.background = "transparent";
     }
     window.addEventListener("blur", reset);
@@ -34,41 +40,41 @@ export function PointerDotBackground({
     if (!rect) return;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    setMask(`radial-gradient(circle 280px at ${x}px ${y}px, black 0%, transparent 100%)`);
+    showBright(x, y);
     if (glowRef.current) {
       glowRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(90,24,154,0.12), transparent 50%)`;
     }
   }
 
   function handleMouseLeave() {
-    setMask("none");
+    hideBright();
     if (glowRef.current) glowRef.current.style.background = "transparent";
   }
 
   return (
     <div
       ref={containerRef}
-      className={cn("relative bg-[#09090b] overflow-hidden", className)}
+      className={cn("relative bg-bg overflow-hidden", className)}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* Base dot layer — always visible, very dim */}
-      <DotPattern width={24} height={24} cr={1.2} className="text-purple-400/20" />
+      <DotPattern width={24} height={24} cr={1.2} className="text-purple-600/15 dark:text-purple-400/20" />
 
-      {/* Bright dot layer — revealed only near cursor via CSS mask */}
+      {/* Bright dot layer — hidden by default, revealed near cursor */}
       <div
         ref={brightWrapperRef}
         className="absolute inset-0 pointer-events-none"
-        style={{ maskImage: "none" }}
+        style={{ opacity: 0 }}
       >
-        <DotPattern width={24} height={24} cr={1.2} className="text-purple-300/90" />
+        <DotPattern width={24} height={24} cr={1.2} className="text-purple-600/80 dark:text-purple-300/90" />
       </div>
 
       {/* Purple glow following cursor */}
       <div ref={glowRef} className="absolute inset-0 pointer-events-none z-[1]" />
 
       {/* Ambient glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-900/20 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-400/10 dark:bg-purple-900/20 blur-[100px] pointer-events-none" />
 
       <div className="relative z-10">{children}</div>
     </div>
