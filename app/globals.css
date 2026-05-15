@@ -197,6 +197,7 @@
   50% { transform: translateY(-10px); }
 }
 
+
 body {
   background: var(--bg);
   color: var(--fg);

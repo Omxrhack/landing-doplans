@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Navbar from "@/app/components/Navbar";
 import { WordRotate } from "@/components/ui/word-rotate";
@@ -12,6 +12,7 @@ const GlobeDoplans = dynamic(() => import("@/components/globe"), { ssr: false })
 
 export default function Hero() {
   const [activeEvent, setActiveEvent] = useState<GlobeEvent | null>(null);
+  const barHeights = useMemo(() => [10, 13, 8, 15, 12], []);
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -106,7 +107,7 @@ export default function Hero() {
                       <div
                         key={i}
                         className="w-1 rounded-full bg-purple"
-                        style={{ height: `${8 + Math.random() * 8}px`, opacity: 0.3 + i * 0.15 }}
+                        style={{ height: `${barHeights[i]}px`, opacity: 0.3 + i * 0.15 }}
                       />
                     ))}
                   </div>
