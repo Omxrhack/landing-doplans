@@ -15,7 +15,7 @@ function Beam({ index }: { index: number }) {
       style={{
         width: "6px",
         transform: "translateY(-20%)",
-        "--delay": `${index * 0.5}s`,
+        ["--delay" as string]: `${index * 0.5}s`,
         animation: "meteor var(--duration) var(--delay) ease-in-out infinite",
       }}
     >
