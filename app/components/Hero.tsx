@@ -63,7 +63,7 @@ export default function Hero() {
             <div className="absolute -inset-3 rounded-3xl bg-purple/10 blur-xl" />
 
             <div className="relative w-60 rounded-2xl border border-border bg-bg-secondary shadow-2xl shadow-purple/15 overflow-hidden">
-
+              {/* Este es estilo que se manejara en la card o en la app para la landing page*/}
               {/* Franja superior con color de categoría */}
               <div className="h-1 w-full bg-gradient-to-r from-purple via-purple-light to-transparent" />
 
