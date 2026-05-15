@@ -1,6 +1,6 @@
 "use client";
 
-import AnimatedBeam from "@/components/animata/background/animated-beam";
+import { PointerDotBackground } from "@/app/components/PointerDotBackground";
 import { Globe } from "@/components/ui/globe";
 import { Button } from "@/components/ui/button";
 import { WordRotate } from "@/components/ui/word-rotate";
@@ -87,7 +87,7 @@ const globeConfig = {
 
 export default function Hero() {
   return (
-    <AnimatedBeam className="min-h-[90vh] flex flex-col">
+    <PointerDotBackground className="min-h-[90vh] flex flex-col">
       {/* Main content */}
       <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-16 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 items-center">
         {/* LEFT — Text content */}
@@ -203,6 +203,6 @@ export default function Hero() {
           ))}
         </Marquee>
       </div>
-    </AnimatedBeam>
+    </PointerDotBackground>
   );
 }

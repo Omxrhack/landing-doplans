@@ -30,9 +30,15 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={cn("h-full", "antialiased", poppins.variable, urbanist.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col bg-bg text-fg">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+          }}
+        />
         {children}
       </body>
     </html>

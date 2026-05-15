@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ThemeToggle from "./ThemeToggle";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 const links = [
   { label: "Inicio", href: "#inicio" },
@@ -14,9 +14,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    function onScroll() {
-      setScrolled(window.scrollY > 10);
-    }
+    const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -24,27 +22,26 @@ export default function Navbar() {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
-          ? "bg-bg/80 backdrop-blur-md border-b border-border"
-          : "bg-transparent"
+        scrolled ? "backdrop-blur-md bg-bg/80 border-b border-border shadow-sm" : "bg-transparent"
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
         {/* Logo */}
         <a href="#inicio" className="font-display font-bold text-xl tracking-tight select-none">
           <span className="text-fg">do</span>
           <span className="text-purple">plans</span>
         </a>
 
-        {/* Nav links — desktop */}
+        {/* Links — desktop */}
         <ul className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <li key={link.href}>
+          {links.map((l) => (
+            <li key={l.href}>
               <a
-                href={link.href}
+                href={l.href}
                 className="font-sans text-sm font-medium text-fg-muted hover:text-fg transition-colors relative group"
               >
-                {link.label}
+                {l.label}
                 <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-purple transition-all duration-200 group-hover:w-full" />
               </a>
             </li>
@@ -53,10 +50,7 @@ export default function Navbar() {
 
         {/* CTAs — desktop */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="#descargar"
-            className="font-sans text-sm font-medium text-fg-muted hover:text-fg transition-colors"
-          >
+          <a href="#descargar" className="font-sans text-sm font-medium text-fg-muted hover:text-fg transition-colors">
             Descargar
           </a>
           <a
@@ -65,16 +59,22 @@ export default function Navbar() {
           >
             Unirse
           </a>
-          <ThemeToggle />
+          <AnimatedThemeToggler
+            variant="circle"
+            className="flex items-center justify-center w-9 h-9 rounded-full text-fg-muted hover:text-fg hover:bg-fg/5 transition-colors cursor-pointer"
+          />
         </div>
 
-        {/* Mobile right side */}
+        {/* Mobile */}
         <div className="flex md:hidden items-center gap-2">
-          <ThemeToggle />
+          <AnimatedThemeToggler
+            variant="circle"
+            className="flex items-center justify-center w-9 h-9 rounded-full text-fg-muted hover:text-fg hover:bg-fg/5 transition-colors cursor-pointer"
+          />
           <button
             onClick={() => setMenuOpen((o) => !o)}
             aria-label="Toggle menu"
-            className="flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-full hover:bg-bg-secondary transition-colors cursor-pointer"
+            className="flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-full hover:bg-fg/5 transition-colors cursor-pointer"
           >
             <span className={`block h-0.5 w-5 bg-fg transition-all duration-200 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
             <span className={`block h-0.5 w-5 bg-fg transition-all duration-200 ${menuOpen ? "opacity-0" : ""}`} />
@@ -85,22 +85,19 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-border bg-bg px-6 pb-6 pt-4 flex flex-col gap-4">
-          {links.map((link) => (
+        <div className="md:hidden bg-bg border-t border-border px-6 pb-6 pt-4 flex flex-col gap-4">
+          {links.map((l) => (
             <a
-              key={link.href}
-              href={link.href}
+              key={l.href}
+              href={l.href}
               onClick={() => setMenuOpen(false)}
               className="font-sans text-sm font-medium text-fg-muted hover:text-fg transition-colors py-1"
             >
-              {link.label}
+              {l.label}
             </a>
           ))}
           <div className="flex flex-col gap-3 pt-2 border-t border-border">
-            <a
-              href="#descargar"
-              className="font-sans text-sm font-medium text-fg-muted hover:text-fg transition-colors py-1"
-            >
+            <a href="#descargar" className="font-sans text-sm font-medium text-fg-muted hover:text-fg transition-colors py-1">
               Descargar
             </a>
             <a
