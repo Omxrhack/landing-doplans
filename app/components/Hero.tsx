@@ -58,7 +58,7 @@ export default function Hero() {
       <Navbar />
 
       {/* Globe — absolute, massive, clipped by overflow-hidden */}
-      <div className="absolute top-1/2 -translate-y-1/2 right-[-30%] w-[95vh] h-[95vh] pointer-events-none z-0">
+      <div className="absolute pointer-events-none z-0" style={{ width: '130vh', height: '130vh', right: '-20vh', top: 'calc(50vh - 65vh)' }}>
         <Globe className="w-full h-full" config={globeConfig} />
       </div>
 
