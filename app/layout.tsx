@@ -2,12 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Urbanist, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
 import Providers from "./components/Providers";
-const SmoothCursor = dynamic(
-  () => import("@/components/ui/smooth-cursor").then((m) => ({ default: m.SmoothCursor })),
-  { ssr: false }
-);
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -46,7 +41,6 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme:dark)').matches)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
           }}
         />
-        <SmoothCursor />
         <Providers>{children}</Providers>
       </body>
     </html>
