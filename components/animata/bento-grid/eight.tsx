@@ -1,5 +1,7 @@
 "use client";
 
+import { motion, useInView } from "motion/react";
+import { useRef } from "react";
 import { MapPin, Bell, MessageCircle, Sparkles, Users, CalendarDays } from "lucide-react";
 
 import BarChart from "@/components/animata/graphs/bar-chart";
@@ -9,17 +11,37 @@ import Ticker from "@/components/animata/text/ticker";
 import TypingText from "@/components/animata/text/typing-text";
 import { cn } from "@/lib/utils";
 
-function BentoCard({ children, className }: { children: React.ReactNode; className?: string }) {
+function AnimatedCard({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
+
   return (
-    <div className={cn("group/bento relative h-full w-full overflow-hidden rounded-3xl border border-border p-5 transition-all duration-300 hover:border-purple/30", className)}>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 32 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={cn(
+        "group/bento relative h-full w-full overflow-hidden rounded-3xl border border-border p-5 transition-colors duration-300 hover:border-purple/30",
+        className,
+      )}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
 function FeatureOne() {
   return (
-    <BentoCard className="flex flex-col bg-bg-secondary">
+    <AnimatedCard className="flex flex-col bg-bg-secondary" delay={0}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted">
         <MapPin className="size-4 text-purple" />
         Eventos hoy
@@ -33,13 +55,13 @@ function FeatureOne() {
         </div>
         <div className="text-xs text-fg-muted">cerca de ti ahora</div>
       </div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureTwo() {
   return (
-    <BentoCard className="relative flex flex-col bg-purple sm:col-span-2">
+    <AnimatedCard className="relative flex flex-col bg-purple sm:col-span-2" delay={0.08}>
       <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
         <Users className="size-4" />
         Comunidades activas
@@ -52,13 +74,13 @@ function FeatureTwo() {
       <div className="mt-auto">
         <AvatarList size="sm" className="py-0" />
       </div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureThree() {
   return (
-    <BentoCard className="flex flex-col bg-bg-secondary">
+    <AnimatedCard className="flex flex-col bg-bg-secondary" delay={0.16}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted">
         <Sparkles className="size-4 text-purple" />
         IA personalizada
@@ -69,13 +91,13 @@ function FeatureThree() {
           <TypingText text="Concierto de jazz en el centro a las 20h" waitTime={2000} alwaysVisibleCount={0} />
         </div>
       </div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureFour() {
   return (
-    <BentoCard className="flex flex-col gap-3 bg-bg-secondary sm:col-span-2">
+    <AnimatedCard className="flex flex-col gap-3 bg-bg-secondary sm:col-span-2" delay={0.08}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted">
         <CalendarDays className="size-4 text-purple" />
         Planifica con amigos
@@ -92,13 +114,13 @@ function FeatureFour() {
           </div>
         ))}
       </div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureFive() {
   return (
-    <BentoCard className="flex items-center justify-center bg-bg-secondary sm:col-span-2">
+    <AnimatedCard className="flex items-center justify-center bg-bg-secondary sm:col-span-2" delay={0.16}>
       <div className="relative flex items-center justify-center">
         <div className="text-6xl font-black uppercase text-fg/10 transition duration-300 group-hover/bento:opacity-40 md:text-8xl">
           doplans
@@ -107,13 +129,13 @@ function FeatureFive() {
           doplans
         </div>
       </div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureSix() {
   return (
-    <BentoCard className="bg-bg-secondary">
+    <AnimatedCard className="bg-bg-secondary" delay={0}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted mb-3">
         <MessageCircle className="size-4 text-purple" />
         Actividad semanal
@@ -131,13 +153,13 @@ function FeatureSix() {
         height={80}
       />
       <div className="mt-2 text-xs text-fg-muted text-center">posts y eventos compartidos</div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureSeven() {
   return (
-    <BentoCard className="flex flex-col gap-2 bg-bg-secondary">
+    <AnimatedCard className="flex flex-col gap-2 bg-bg-secondary" delay={0.08}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted mb-1">
         <MapPin className="size-4 text-purple" />
         Categorías
@@ -151,13 +173,13 @@ function FeatureSeven() {
           ))}
         </div>
       ))}
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
 function FeatureEight() {
   return (
-    <BentoCard className="relative flex flex-col bg-bg-secondary sm:col-span-2">
+    <AnimatedCard className="relative flex flex-col bg-bg-secondary sm:col-span-2" delay={0.16}>
       <div className="flex items-center gap-2 text-sm font-medium text-fg-muted mb-3">
         <Bell className="size-4 text-purple" />
         Alertas en tiempo real
@@ -174,7 +196,7 @@ function FeatureEight() {
           </div>
         ))}
       </div>
-    </BentoCard>
+    </AnimatedCard>
   );
 }
 
