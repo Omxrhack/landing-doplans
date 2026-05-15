@@ -2,6 +2,7 @@ import { PointerDotBackground } from "./components/PointerDotBackground";
 import Hero from "./components/Hero";
 import Caracteristicas from "./components/Caracteristicas";
 import Problematica from "./components/Problematica";
+import ParallaxBand from "./components/ParallaxBand";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <Hero />
       <Caracteristicas />
       <Problematica />
+      <ParallaxBand />
     </PointerDotBackground>
   );
 }
