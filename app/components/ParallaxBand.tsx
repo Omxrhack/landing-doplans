@@ -4,25 +4,25 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "motion/react";
 
 const WORDS = [
-  "Descubre",
-  "planes,",
-  "conecta",
-  "con",
-  "tu",
-  "ciudad",
-  "y",
-  "vive",
-  "cada",
-  "momento.",
+  "Descubre", "planes,", "conecta", "con", "tu", "ciudad",
+  "y", "vive", "cada", "momento.",
 ];
 
-function Word({ word, progress, start, end }: { word: string; progress: MotionValue<number>; start: number; end: number }) {
-  const peak = start + (end - start) * 0.4;
-  const opacity = useTransform(progress, [start, peak, end], [0, 1, 0]);
-  const y = useTransform(progress, [start, peak], ["20px", "0px"]);
+function Word({
+  word,
+  progress,
+  start,
+  end,
+}: {
+  word: string;
+  progress: MotionValue<number>;
+  start: number;
+  end: number;
+}) {
+  const opacity = useTransform(progress, [start, end], [0.15, 1]);
 
   return (
-    <motion.span style={{ opacity, y }} className="inline-block mx-[0.2em]">
+    <motion.span style={{ opacity }} className="inline-block mr-[0.25em]">
       {word}
     </motion.span>
   );
@@ -36,16 +36,14 @@ export default function ParallaxBand() {
   });
 
   const total = WORDS.length;
-  const step = 1 / total;
-  const overlap = step * 0.5;
 
   return (
-    <div ref={ref} className="relative h-[250vh]">
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-8">
-        <p className="font-display font-black text-[clamp(2rem,6vw,5rem)] text-fg text-center leading-tight max-w-4xl">
+    <div ref={ref} className="relative h-[200vh]">
+      <div className="sticky top-0 h-screen flex items-center justify-center px-8 lg:px-24">
+        <p className="font-display font-black text-[clamp(2.2rem,5.5vw,5rem)] text-fg text-center leading-[1.15] max-w-3xl">
           {WORDS.map((word, i) => {
-            const start = Math.max(0, i * step - overlap);
-            const end = Math.min(1, (i + 1) * step + overlap);
+            const start = i / total;
+            const end = (i + 1) / total;
             return (
               <Word key={i} word={word} progress={scrollYProgress} start={start} end={end} />
             );
