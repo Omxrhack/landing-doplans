@@ -1,115 +1,106 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useParallax } from "react-scroll-parallax";
+import Rellax from "rellax";
 import { DotPattern } from "@/components/ui/dot-pattern";
 
-const WORDS = [
-  "Descubre", "planes,", "conecta", "con", "tu", "ciudad",
-  "y", "vive", "cada", "momento.",
-];
+const WORDS = ["Descubre", "planes,", "vive", "tu", "ciudad."];
 
-// Para 600vh de elemento en viewport 100vh:
-// progreso total = 700vh → zona sticky activa = [100/700, 600/700]
-const RANGE_START = 100 / 700;
-const RANGE_END   = 600 / 700;
+function AnimatedWord({ word, dir }: { word: string; dir: "fwd" | "bwd" }) {
+  const fromY = dir === "fwd" ? 48 : -48;
+  const exitY = dir === "fwd" ? -48 : 48;
 
-function AnimatedWord({ word }: { word: string }) {
   return (
     <motion.div
-      className="absolute inset-0 flex items-center justify-center font-display font-black text-[clamp(3.5rem,10vw,10rem)] text-purple leading-none px-8"
-      exit={{ opacity: 0, y: -40, scale: 0.92, transition: { duration: 0.45, ease: [0.4, 0, 0.6, 1] } }}
+      className="absolute inset-0 flex items-center justify-center font-display font-black text-[clamp(3.5rem,10vw,10rem)] text-purple select-none"
+      initial={{ opacity: 0, y: fromY, filter: "blur(16px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      exit={{ opacity: 0, y: exitY, filter: "blur(16px)" }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      {word.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          className="inline-block"
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {char}
-        </motion.span>
-      ))}
+      {word}
     </motion.div>
   );
 }
 
 export default function ParallaxBand() {
   const [activeIndex, setActiveIndex] = useState(-1);
-  const currentIdxRef  = useRef(-1);
-  const isAnimatingRef = useRef(false);
-  const timerRef       = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [dir, setDir] = useState<"fwd" | "bwd">("fwd");
+  const currentIdxRef = useRef(-1);
+  const outerRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
 
-  function showWord(idx: number) {
-    if (idx === currentIdxRef.current) return;
-    isAnimatingRef.current = true;
-    currentIdxRef.current  = idx;
-    setActiveIndex(idx);
+  useEffect(() => {
+    // Rellax sólo para el fondo — efecto de profundidad real
+    const bgRellax = bgRef.current
+      ? new Rellax(bgRef.current, { speed: -3, center: true, round: true })
+      : null;
 
-    // Tiempo hasta que las letras terminan de entrar + margen de lectura
-    const word    = idx >= 0 ? WORDS[idx] : "";
-    const lockMs  = word.length * 70 + 550 + 400;
+    // Scroll listener confiable para las palabras
+    const onScroll = () => {
+      const el = outerRef.current;
+      if (!el) return;
 
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      isAnimatingRef.current = false;
-    }, lockMs);
-  }
+      const rect = el.getBoundingClientRect();
+      const scrollable = el.offsetHeight - window.innerHeight;
 
-  const { ref } = useParallax<HTMLDivElement>({
-    onProgressChange: (progress) => {
-      // Salida: ocultar solo si se sale por arriba (scroll hacia atrás al inicio)
-      if (progress < RANGE_START) {
-        if (timerRef.current) clearTimeout(timerRef.current);
-        isAnimatingRef.current = false;
-        currentIdxRef.current  = -1;
-        setActiveIndex(-1);
+      if (rect.top > 0) {
+        if (currentIdxRef.current !== -1) {
+          currentIdxRef.current = -1;
+          setDir("bwd");
+          setActiveIndex(-1);
+        }
         return;
       }
 
-      const p = progress >= RANGE_END
-        ? 1
-        : (progress - RANGE_START) / (RANGE_END - RANGE_START);
+      if (-rect.top > scrollable) return;
 
+      const progress = -rect.top / scrollable;
       const targetIdx = Math.min(
-        Math.floor(p * WORDS.length),
+        Math.floor(progress * WORDS.length),
         WORDS.length - 1
       );
 
-      // Si estamos animando, ignorar avances — esperar a que termine
-      if (isAnimatingRef.current) return;
+      if (targetIdx === currentIdxRef.current) return;
 
-      if (targetIdx !== currentIdxRef.current) {
-        // Avanzar solo 1 palabra a la vez (nunca saltar)
-        const nextIdx = targetIdx > currentIdxRef.current
-          ? currentIdxRef.current + 1
-          : targetIdx;
-        showWord(nextIdx);
-      }
-    },
-    shouldAlwaysCompleteAnimation: true,
-  });
+      const forward = targetIdx > currentIdxRef.current;
+      const nextIdx = forward
+        ? currentIdxRef.current + 1
+        : currentIdxRef.current - 1;
+
+      currentIdxRef.current = nextIdx;
+      setDir(forward ? "fwd" : "bwd");
+      setActiveIndex(nextIdx);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      bgRellax?.destroy();
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   return (
-    <div ref={ref} className="relative h-[600vh]">
+    <div ref={outerRef} className="relative h-[400vh]">
       <div className="sticky top-0 h-screen bg-bg overflow-hidden">
 
-        {/* Fondo dots estático — no reacciona al cursor */}
-        <DotPattern
-          width={24} height={24} cr={1.2}
-          className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20"
-        />
+        {/* Fondo con parallax Rellax */}
+        <div ref={bgRef} className="absolute -inset-20 pointer-events-none">
+          <DotPattern
+            width={24} height={24} cr={1.2}
+            className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20"
+          />
+        </div>
 
-        {/* Halo central */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,_#2a0a5430_0%,_transparent_100%)]" />
 
-        {/* Palabras */}
         <div className="relative w-full h-full">
           <AnimatePresence mode="wait">
             {activeIndex >= 0 && (
-              <AnimatedWord key={activeIndex} word={WORDS[activeIndex]} />
+              <AnimatedWord key={activeIndex} word={WORDS[activeIndex]} dir={dir} />
             )}
           </AnimatePresence>
         </div>
