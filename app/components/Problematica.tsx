@@ -2,7 +2,6 @@
 
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-import TypingText from "@/components/animata/text/typing-text";
 
 const PROBLEMS = [
   {
@@ -78,17 +77,14 @@ function ProblemRow({
         <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-purple">
           ✦ Solución
         </span>
-        {isInView && (
-          <TypingText
-            text={solution}
-            delay={38}
-            repeat={false}
-            hideCursorOnComplete
-            grow={true}
-            cursor={<span className="text-purple">|</span>}
-            className="text-fg font-display font-semibold text-base not-italic"
-          />
-        )}
+        <motion.p
+          initial={{ opacity: 0, x: -6 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -6 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          className="font-display font-semibold text-base text-fg"
+        >
+          {solution}
+        </motion.p>
       </div>
 
       {/* Solution badge — mobile only */}
@@ -106,7 +102,7 @@ export default function Problematica() {
   const isInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="problematica" className="py-24 px-6 overflow-x-hidden">
+    <section id="problematica" className="py-24 px-6">
       <div className="max-w-5xl mx-auto">
         <motion.div
           ref={headerRef}
