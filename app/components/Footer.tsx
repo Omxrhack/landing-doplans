@@ -1,5 +1,7 @@
 "use client";
 
+import { DotPattern } from "@/components/ui/dot-pattern";
+
 const NAV_LINKS = [
   { label: "Inicio",          href: "#inicio" },
   { label: "Características", href: "#caracteristicas" },
@@ -40,8 +42,9 @@ function IconTikTok() {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-bg">
-      <div className="max-w-5xl mx-auto px-6 py-16">
+    <footer className="relative border-t border-border bg-bg overflow-hidden">
+      <DotPattern width={24} height={24} cr={1.2} className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20" />
+      <div className="relative max-w-5xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
           {/* Logo + tagline + redes */}
