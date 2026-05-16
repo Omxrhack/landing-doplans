@@ -86,7 +86,7 @@ function ProblemRow({
             hideCursorOnComplete
             grow={true}
             cursor={<span className="text-purple">|</span>}
-            className="text-fg font-display font-semibold text-lg not-italic"
+            className="text-fg font-display font-semibold text-base not-italic"
           />
         )}
       </div>
@@ -106,7 +106,7 @@ export default function Problematica() {
   const isInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="problematica" className="py-24 px-6">
+    <section id="problematica" className="py-24 px-6 overflow-x-hidden">
       <div className="max-w-5xl mx-auto">
         <motion.div
           ref={headerRef}
