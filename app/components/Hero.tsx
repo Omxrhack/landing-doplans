@@ -22,7 +22,7 @@ export default function Hero() {
 
       {/* Texto hero */}
       <div className="relative flex-1 flex items-center z-20 px-4 lg:pl-[7%] lg:pr-12 min-h-screen pt-20 pointer-events-none">
-        <div className="flex flex-col gap-5 max-w-lg">
+        <div className="flex flex-col gap-5 max-w-xl">
           <div className="flex flex-col">
             <h1 className="font-display font-black text-[9vw] sm:text-5xl lg:text-7xl text-fg leading-tight">
               Descubre los mejores

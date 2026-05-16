@@ -84,8 +84,9 @@ function ProblemRow({
             delay={38}
             repeat={false}
             hideCursorOnComplete
+            grow={true}
             cursor={<span className="text-purple">|</span>}
-            className="text-fg font-display font-semibold text-lg not-italic break-words w-full"
+            className="text-fg font-display font-semibold text-lg not-italic"
           />
         )}
       </div>
