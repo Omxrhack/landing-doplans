@@ -2,7 +2,6 @@
 
 import { motion } from "motion/react";
 import { Marquee } from "@/components/ui/marquee";
-import { DotPattern } from "@/components/ui/dot-pattern";
 
 const testimonials = [
   { name: "Sofía Ramírez",   city: "CDMX",        quote: "Encontré un concierto increíble a 10 min de mi casa que ni sabía que existía." },
@@ -39,7 +38,6 @@ function TestimonialCard({ name, city, quote }: { name: string; city: string; qu
 export default function Testimonios() {
   return (
     <section id="testimonios" className="relative py-24 overflow-hidden">
-      <DotPattern width={24} height={24} cr={1.2} className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20" />
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,_#2a0a5418_0%,_transparent_100%)]" />
 
       <div className="relative max-w-5xl mx-auto px-6 mb-12">

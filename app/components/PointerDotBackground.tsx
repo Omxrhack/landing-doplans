@@ -1,8 +1,12 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { DotPattern } from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
+
+const DOT_STYLE = {
+  backgroundImage: "radial-gradient(circle at 1.2px 1.2px, currentColor 1.2px, transparent 0)",
+  backgroundSize: "24px 24px",
+} as const;
 
 export function PointerDotBackground({
   children,
@@ -58,17 +62,18 @@ export function PointerDotBackground({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Base dot layer — always visible, very dim */}
-      <DotPattern width={24} height={24} cr={1.2} className="text-purple-600/15 dark:text-purple-400/20" />
+      {/* Base dot layer — CSS gradient, tila infinitamente sin cálculo */}
+      <div
+        className="absolute inset-0 pointer-events-none text-purple-600/15 dark:text-purple-400/20"
+        style={DOT_STYLE}
+      />
 
       {/* Bright dot layer — hidden by default, revealed near cursor */}
       <div
         ref={brightWrapperRef}
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0 }}
-      >
-        <DotPattern width={24} height={24} cr={1.2} className="text-purple-600/80 dark:text-purple-300/90" />
-      </div>
+        className="absolute inset-0 pointer-events-none text-purple-600/80 dark:text-purple-300/90"
+        style={{ ...DOT_STYLE, opacity: 0 }}
+      />
 
       {/* Purple glow following cursor */}
       <div ref={glowRef} className="absolute inset-0 pointer-events-none z-[1]" />

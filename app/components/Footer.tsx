@@ -1,7 +1,5 @@
 "use client";
 
-import { DotPattern } from "@/components/ui/dot-pattern";
-
 const NAV_LINKS = [
   { label: "Inicio",          href: "#inicio" },
   { label: "Características", href: "#caracteristicas" },
@@ -10,8 +8,8 @@ const NAV_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacidad",    href: "#" },
-  { label: "Términos de uso", href: "#" },
+  { label: "Privacidad",      href: "/privacidad" },
+  { label: "Términos de uso", href: "/terminos" },
 ];
 
 function IconInstagram() {
@@ -42,9 +40,8 @@ function IconTikTok() {
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-border bg-bg overflow-hidden">
-      <DotPattern width={24} height={24} cr={1.2} className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20" />
-      <div className="relative max-w-5xl mx-auto px-6 py-16">
+    <footer className="relative border-t border-border overflow-hidden">
+      <div className="max-w-5xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
           {/* Logo + tagline + redes */}
@@ -113,7 +110,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-fg-muted">© 2026 Doplans. Todos los derechos reservados.</p>
-          <p className="text-xs text-fg-muted">Hecho con amor en México</p>
+        
         </div>
       </div>
     </footer>

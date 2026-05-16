@@ -5,7 +5,6 @@ import {
   motion,
   AnimatePresence,
   useScroll,
-  useTransform,
   useMotionValueEvent,
 } from "motion/react";
 import { DotPattern } from "@/components/ui/dot-pattern";
@@ -42,9 +41,6 @@ export default function ParallaxBand() {
     offset: ["start start", "end end"],
   });
 
-  // Fondo: se desplaza en sentido contrario al scroll → efecto profundidad real
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
-
   // Palabras: reaccionan a cada cambio de scrollYProgress (RAF-synced)
   useMotionValueEvent(scrollYProgress, "change", (p) => {
     if (p <= 0) {
@@ -69,16 +65,10 @@ export default function ParallaxBand() {
     <div ref={outerRef} className="relative h-[400vh]">
       <div className="sticky top-0 h-screen bg-bg overflow-hidden">
 
-        {/* Fondo parallax: useTransform lo desplaza ligero opuesto al scroll */}
-        <motion.div
-          className="absolute -inset-16 pointer-events-none"
-          style={{ y: bgY }}
-        >
-          <DotPattern
-            width={24} height={24} cr={1.2}
-            className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20"
-          />
-        </motion.div>
+        <DotPattern
+          width={24} height={24} cr={1.2}
+          className="absolute inset-0 text-purple-600/15 dark:text-purple-400/20"
+        />
 
         {/* Halo */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,_#2a0a5430_0%,_transparent_100%)]" />
