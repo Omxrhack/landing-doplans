@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 const links = [
-  { label: "Inicio",          href: "#inicio" },
-  { label: "Características", href: "#caracteristicas" },
-  { label: "Problemática",    href: "#problematica" },
+  { label: "Inicio",          href: "/#inicio" },
+  { label: "Características", href: "/#caracteristicas" },
+  { label: "Problemática",    href: "/#problematica" },
 ];
 
 export default function Navbar() {
@@ -32,7 +32,7 @@ export default function Navbar() {
           }`}
         >
           {/* Logo */}
-          <a href="#inicio" className="tracking-tight select-none px-1 mr-2" style={{ fontFamily: "var(--font-poppins)", fontWeight: 900, fontSize: "1.1rem", fontStyle: "italic" }}>
+          <a href="/" className="tracking-tight select-none px-1 mr-2" style={{ fontFamily: "var(--font-poppins)", fontWeight: 900, fontSize: "1.1rem", fontStyle: "italic" }}>
             <span className="text-fg">d</span>
             <span className="text-purple">p</span>
           </a>
@@ -60,7 +60,7 @@ export default function Navbar() {
               className="flex items-center justify-center w-8 h-8 rounded-xl text-fg-muted hover:text-fg hover:bg-fg/5 transition-all cursor-pointer"
             />
             <a
-              href="#unirse"
+              href="/#unirse"
               className="font-sans text-sm font-semibold bg-purple hover:bg-purple-light text-white px-4 py-1.5 rounded-xl transition-colors"
             >
               Unirse
@@ -102,7 +102,7 @@ export default function Navbar() {
             ))}
             <div className="h-px bg-border my-1" />
             <a
-              href="#unirse"
+              href="/#unirse"
               className="font-sans text-sm font-semibold bg-purple hover:bg-purple-light text-white px-4 py-2 rounded-xl text-center transition-colors"
             >
               Unirse
