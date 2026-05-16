@@ -74,7 +74,7 @@ function ProblemRow({
       </div>
 
       {/* Right — desktop only */}
-      <div className="hidden lg:flex lg:col-span-5 min-w-0 flex-col justify-center gap-2 pl-8 border-l border-border">
+      <div className="hidden lg:flex lg:col-span-5 min-w-0 overflow-hidden flex-col justify-center gap-2 pl-8 border-l border-border">
         <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-purple">
           ✦ Solución
         </span>
@@ -85,7 +85,7 @@ function ProblemRow({
             repeat={false}
             hideCursorOnComplete
             cursor={<span className="text-purple">|</span>}
-            className="text-fg font-display font-semibold text-lg not-italic break-words"
+            className="text-fg font-display font-semibold text-lg not-italic break-words w-full"
           />
         )}
       </div>
