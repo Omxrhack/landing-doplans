@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Navbar from "@/app/components/Navbar";
 import { WordRotate } from "@/components/ui/word-rotate";
 import dynamic from "next/dynamic";
 import { type GlobeEvent } from "@/lib/globe-events";
-import { MapPin, Clock, Users } from "lucide-react";
 
 const GlobeDoplans = dynamic(() => import("@/components/globe"), { ssr: false });
 
 export default function Hero() {
   const [activeEvent, setActiveEvent] = useState<GlobeEvent | null>(null);
-  const barHeights = useMemo(() => [10, 13, 8, 15, 12], []);
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -23,18 +21,18 @@ export default function Hero() {
       </div>
 
       {/* Texto hero */}
-      <div className="relative flex-1 flex items-center z-20 px-12 lg:pl-[12%] lg:pr-12 min-h-screen pt-20 pointer-events-none">
+      <div className="relative flex-1 flex items-center z-20 px-4 lg:pl-[7%] lg:pr-12 min-h-screen pt-20 pointer-events-none">
         <div className="flex flex-col gap-5 max-w-lg">
           <div className="flex flex-col">
-            <h1 className="font-display font-black text-5xl lg:text-7xl text-fg leading-tight">
+            <h1 className="font-display font-black text-[9vw] sm:text-5xl lg:text-7xl text-fg leading-tight">
               Descubre los mejores
             </h1>
             <WordRotate
               words={["eventos", "planes", "comunidades"]}
-              className="font-display font-black text-5xl lg:text-7xl text-purple leading-tight"
+              className="font-display font-black text-[9vw] sm:text-5xl lg:text-7xl text-purple leading-tight"
               duration={2500}
             />
-            <h1 className="font-display font-black text-5xl lg:text-7xl text-fg leading-tight">
+            <h1 className="font-display font-black text-[9vw] sm:text-5xl lg:text-7xl text-fg leading-tight">
               en tu ciudad
             </h1>
           </div>
@@ -61,57 +59,48 @@ export default function Hero() {
             className="hidden lg:block absolute right-14 top-1/2 -translate-y-1/2 z-20 pointer-events-none"
           >
             {/* Glow exterior */}
-            <div className="absolute -inset-3 rounded-3xl bg-purple/10 blur-xl" />
+            <div className="absolute -inset-4 rounded-3xl bg-purple/10 blur-2xl" />
 
-            <div className="relative w-60 rounded-2xl border border-border bg-bg-secondary shadow-2xl shadow-purple/15 overflow-hidden">
-              {/* Este es estilo que se manejara en la card o en la app para la landing page*/}
-              {/* Franja superior con color de categoría */}
-              <div className="h-1 w-full bg-gradient-to-r from-purple via-purple-light to-transparent" />
+            <div className="relative w-72 rounded-3xl border border-border/60 bg-bg/80 backdrop-blur-2xl shadow-2xl shadow-purple/20 overflow-hidden p-5 flex flex-col gap-4">
+              {/* Glow ambiental interior */}
+              <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-purple/8 via-transparent to-transparent pointer-events-none" />
 
-              <div className="p-4">
-                {/* Header: emoji + evento + ciudad */}
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-purple/15 flex items-center justify-center text-xl">
-                    {activeEvent.emoji}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-display font-bold text-sm text-fg leading-snug truncate">
-                      {activeEvent.name}
-                    </p>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-2.5 h-2.5 text-purple shrink-0" />
-                      <p className="text-[11px] text-purple font-semibold truncate">{activeEvent.city}</p>
-                    </div>
+              {/* Header: emoji + nombre + ciudad */}
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple/30 to-purple/10 flex items-center justify-center text-2xl shrink-0">
+                  {activeEvent.emoji}
+                </div>
+                <div className="min-w-0">
+                  <p className="font-display font-bold text-sm text-fg leading-snug truncate">
+                    {activeEvent.name}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple shrink-0" />
+                    <p className="text-[11px] text-purple font-semibold truncate">{activeEvent.city}</p>
                   </div>
                 </div>
+              </div>
 
-                {/* Info: horario + asistentes */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-                    <Clock className="w-3 h-3 shrink-0" />
-                    <span>{activeEvent.time}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-fg-muted">
-                    <Users className="w-3 h-3 shrink-0" />
-                    <span className="font-semibold text-fg">{activeEvent.attendees.toLocaleString()}</span>
-                  </div>
-                </div>
+              {/* Divider */}
+              <div className="h-px bg-border/50" />
 
-                {/* Categoría + barra de progreso decorativa */}
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="bg-purple/10 text-purple text-[10px] font-semibold px-2.5 py-1 rounded-full border border-purple/20">
-                    {activeEvent.category}
-                  </span>
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="w-1 rounded-full bg-purple"
-                        style={{ height: `${barHeights[i]}px`, opacity: 0.3 + i * 0.15 }}
-                      />
-                    ))}
-                  </div>
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-[10px] text-fg-muted uppercase tracking-widest mb-1">Hora</p>
+                  <p className="font-display font-bold text-sm text-fg">{activeEvent.time}</p>
                 </div>
+                <div>
+                  <p className="text-[10px] text-fg-muted uppercase tracking-widest mb-1">Asistentes</p>
+                  <p className="font-display font-bold text-sm text-fg">{activeEvent.attendees.toLocaleString()}</p>
+                </div>
+              </div>
+
+              {/* Category pill */}
+              <div className="flex">
+                <span className="text-[10px] font-semibold text-purple bg-purple/10 border border-purple/20 rounded-full px-3 py-1">
+                  {activeEvent.category}
+                </span>
               </div>
             </div>
           </motion.div>

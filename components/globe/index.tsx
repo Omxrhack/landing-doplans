@@ -20,6 +20,7 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
   if (typeof window !== "undefined") Globe = require("react-globe.gl").default;
 
   const globeEl = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [arcsData, setArcsData]         = useState([]);
   const [ringsData, setRingsData]       = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -30,6 +31,17 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
   const onActiveEventRef                = useRef(onActiveEvent);
 
   useEffect(() => { onActiveEventRef.current = onActiveEvent; }, [onActiveEvent]);
+
+  // Block wheel events from reaching the canvas so the page scrolls instead of the globe zooming.
+  // capture:true fires BEFORE the event reaches the canvas (descendant), stopPropagation
+  // prevents OrbitControls from seeing it; no preventDefault → browser scrolls normally.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const stopWheel = (e: WheelEvent) => e.stopPropagation();
+    el.addEventListener("wheel", stopWheel, { capture: true, passive: true });
+    return () => el.removeEventListener("wheel", stopWheel, { capture: true });
+  }, []);
 
   // Detect theme
   useEffect(() => {
@@ -56,7 +68,20 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
     return () => window.removeEventListener("resize", update);
   }, []);
 
+  // Resume animation when tab regains focus (browser pauses canvas renderer on hidden tabs)
   useEffect(() => {
+    const handleVisibility = () => {
+      if (!document.hidden && globeEl.current) {
+        globeEl.current.resumeAnimation();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
+
+  useEffect(() => {
+    globeEl.current?.resumeAnimation();
+
     const from    = GLOBE_EVENTS[currentIndex];
     const nextIdx = (currentIndex + 1) % GLOBE_EVENTS.length;
     const to      = GLOBE_EVENTS[nextIdx];
@@ -98,10 +123,11 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
   const labelColor = isDark ? "rgba(230, 200, 255, 1)"    : "rgba(55, 10, 110, 1)";
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
       <div className="translate-x-[38%] scale-[1.35]">
         <Globe
           ref={globeEl}
+          enablePointerInteraction={true}
           width={dimensions.width}
           height={dimensions.height}
           hexPolygonsData={hexData}
@@ -144,6 +170,13 @@ export default function GlobeDoplans({ onActiveEvent }: GlobeDoplansPropss) {
           backgroundColor="rgba(0,0,0,0)"
           showAtmosphere={false}
           showGlobe={false}
+          onGlobeReady={() => {
+            const controls = globeEl.current?.controls();
+            if (controls) {
+              controls.enableZoom = false;
+              controls.enablePan = false;
+            }
+          }}
         />
       </div>
     </div>
